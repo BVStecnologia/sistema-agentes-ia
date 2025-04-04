@@ -1,46 +1,86 @@
 import asyncio
 import os
+import sys
 from dotenv import load_dotenv
 from contextlib import AsyncExitStack
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.live import Live
+from rich.panel import Panel
+from rich.text import Text
 
 # Importar agente central
 from agente_central.agent import create_central_agent
+from utils.server_manager import validate_environment
 
+# Carregar variáveis de ambiente
 load_dotenv()
 
 async def main():
     """Função principal que inicia o sistema de agentes."""
-    print("🤖 Sistema Hierárquico de Agentes IA")
-    print("Digite 'sair' para encerrar o programa.\n")
-    
-    # Cria o agente central (que por sua vez criará os agentes especializados)
-    central_agent, exit_stack = await create_central_agent()
-    
-    # Inicializa console para renderização formatada
     console = Console()
+    
+    # Banner de boas-vindas
+    console.print(Panel.fit(
+        Text("Sistema Hierárquico de Agentes IA", style="bold cyan"),
+        subtitle="v0.1.0 - Agente Brave Search",
+        border_style="cyan"
+    ))
+    
+    # Verificar variáveis de ambiente
+    problems = validate_environment()
+    if problems:
+        console.print("\n[bold red]⚠️  Problemas de configuração encontrados:[/bold red]")
+        for problem in problems:
+            console.print(f"[red]- {problem}[/red]")
+        console.print("\n[yellow]Consulte GETTING_STARTED.md para instruções de configuração.[/yellow]")
+        return
+    
+    try:
+        # Criar agente central (que criará o agente Brave)
+        console.print("\n[yellow]Inicializando agentes... (isso pode levar alguns segundos)[/yellow]")
+        central_agent, exit_stack = await create_central_agent()
+        console.print("[green]✓ Agentes inicializados com sucesso![/green]")
+    except Exception as e:
+        console.print(f"\n[bold red]❌ Erro ao inicializar agentes:[/bold red] {str(e)}")
+        console.print("\n[yellow]Verifique:\n1. Se o Node.js está instalado\n2. Se o servidor MCP do Brave foi instalado\n3. Se as chaves de API estão configuradas corretamente[/yellow]")
+        return
+    
+    # Instruções de uso
+    console.print("\n[cyan]Instruções:[/cyan]")
+    console.print("• Digite suas perguntas para pesquisar na web usando o Brave Search")
+    console.print("• Digite [bold]'sair'[/bold], [bold]'exit'[/bold] ou [bold]'quit'[/bold] para encerrar")
+    console.print("• Digite [bold]'ajuda'[/bold] ou [bold]'help'[/bold] para ver estas instruções novamente")
     
     # Histórico de mensagens
     messages = []
     
     # Loop principal de interação
     async with exit_stack:
-        print("Sistema inicializado e pronto para receber consultas!\n")
+        console.print("\n[green]Sistema pronto para receber consultas![/green]")
         
         while True:
             # Entrada do usuário
-            user_input = input("\n[Você] ")
+            user_input = console.input("\n[bold cyan][Você][/bold cyan] ")
             
-            # Verifica se o usuário quer sair
+            # Verificar comandos especiais
             if user_input.lower() in ['sair', 'exit', 'quit']:
-                print("Até mais! 👋")
+                console.print("\n[yellow]Encerrando sistema... Até mais! 👋[/yellow]")
                 break
+            
+            if user_input.lower() in ['ajuda', 'help', '?']:
+                console.print("\n[cyan]Instruções:[/cyan]")
+                console.print("• Digite suas perguntas para pesquisar na web usando o Brave Search")
+                console.print("• Digite [bold]'sair'[/bold], [bold]'exit'[/bold] ou [bold]'quit'[/bold] para encerrar")
+                console.print("• Digite [bold]'ajuda'[/bold] ou [bold]'help'[/bold] para ver estas instruções")
+                continue
+            
+            if not user_input.strip():
+                continue
             
             try:
                 # Processa a entrada e obtém a resposta
-                print("\n[Assistente]")
+                console.print("\n[bold green][Assistente][/bold green]")
                 with Live('', console=console, vertical_overflow='visible') as live:
                     async with central_agent.run_stream(
                         user_input, message_history=messages
@@ -54,8 +94,12 @@ async def main():
                         messages.extend(result.all_messages())
                 
             except Exception as e:
-                print(f"\n[Erro] Ocorreu um erro: {str(e)}")
-                print("Tente novamente ou verifique as configurações.")
+                console.print(f"\n[bold red][Erro][/bold red] Ocorreu um problema: {str(e)}")
+                console.print("[yellow]Tente novamente ou verifique as configurações.[/yellow]")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("\nPrograma interrompido pelo usuário. Até mais! 👋")
+        sys.exit(0)
