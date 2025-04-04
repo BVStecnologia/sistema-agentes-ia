@@ -1,5 +1,5 @@
 # Biblioteca principal para agentes
-pydantic-ai>=0.6.0
+pydantic-ai>=0.0.52
 
 # Biblioteca para manipulação de ambiente
 python-dotenv>=1.0.0

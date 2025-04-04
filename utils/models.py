@@ -1,6 +1,8 @@
 import os
 from pydantic_ai.providers.openai import OpenAIProvider
 from pydantic_ai.models.openai import OpenAIModel
+from pydantic_ai.providers.anthropic import AnthropicProvider
+from pydantic_ai.models.anthropic import AnthropicModel
 
 def get_model():
     """Retorna uma instância configurada do modelo de linguagem."""
@@ -10,8 +12,15 @@ def get_model():
 
     if api_key == 'no-api-key-provided':
         print("⚠️  Aviso: Chave de API não configurada. Configure suas variáveis de ambiente.")
-
-    return OpenAIModel(
-        model_name, 
-        provider=OpenAIProvider(base_url=base_url, api_key=api_key)
-    )
+    
+    # Verificar se estamos usando o modelo Claude
+    if "claude" in model_name.lower():
+        return AnthropicModel(
+            model_name,
+            provider=AnthropicProvider(api_key=api_key)
+        )
+    else:
+        return OpenAIModel(
+            model_name, 
+            provider=OpenAIProvider(base_url=base_url, api_key=api_key)
+        )
