@@ -1,6 +1,7 @@
 import asyncio
 import os
 import sys
+import traceback
 from dotenv import load_dotenv
 from contextlib import AsyncExitStack
 from rich.console import Console
@@ -43,7 +44,9 @@ async def main():
         console.print("[green]✓ Agentes inicializados com sucesso![/green]")
     except Exception as e:
         console.print(f"\n[bold red]❌ Erro ao inicializar agentes:[/bold red] {str(e)}")
-        console.print("\n[yellow]Verifique:\n1. Se o Node.js está instalado\n2. Se o servidor MCP do Brave foi instalado\n3. Se as chaves de API estão configuradas corretamente[/yellow]")
+        console.print("\n[dim]Detalhes técnicos do erro:[/dim]")
+        console.print(f"[dim]{traceback.format_exc()}[/dim]")
+        console.print("\n[yellow]Verifique:\n1. Se o Node.js está instalado\n2. Se o servidor MCP do Brave foi instalado com: npm install -g @modelcontextprotocol/server-brave-search\n3. Se as chaves de API estão configuradas corretamente no arquivo .env[/yellow]")
         return
     
     # Instruções de uso
@@ -51,6 +54,7 @@ async def main():
     console.print("• Digite suas perguntas para pesquisar na web usando o Brave Search")
     console.print("• Digite [bold]'sair'[/bold], [bold]'exit'[/bold] ou [bold]'quit'[/bold] para encerrar")
     console.print("• Digite [bold]'ajuda'[/bold] ou [bold]'help'[/bold] para ver estas instruções novamente")
+    console.print("• Digite [bold]'debug'[/bold] para ver informações de diagnóstico")
     
     # Histórico de mensagens
     messages = []
@@ -73,6 +77,20 @@ async def main():
                 console.print("• Digite suas perguntas para pesquisar na web usando o Brave Search")
                 console.print("• Digite [bold]'sair'[/bold], [bold]'exit'[/bold] ou [bold]'quit'[/bold] para encerrar")
                 console.print("• Digite [bold]'ajuda'[/bold] ou [bold]'help'[/bold] para ver estas instruções")
+                console.print("• Digite [bold]'debug'[/bold] para ver informações de diagnóstico")
+                continue
+            
+            if user_input.lower() in ['debug', 'diagnóstico', 'diagnostico']:
+                console.print("\n[cyan]Informações de Diagnóstico:[/cyan]")
+                console.print(f"• Modelo LLM: {os.getenv('MODEL_CHOICE', 'gpt-4o-mini')}")
+                console.print(f"• API Base URL: {os.getenv('BASE_URL', 'https://api.openai.com/v1')}")
+                console.print(f"• API Key configurada: {'Sim' if os.getenv('LLM_API_KEY') else 'Não'}")
+                console.print(f"• Brave API Key configurada: {'Sim' if os.getenv('BRAVE_API_KEY') else 'Não'}")
+                try:
+                    from pydantic_ai import __version__ as pydantic_ai_version
+                    console.print(f"• Versão pydantic-ai: {pydantic_ai_version}")
+                except ImportError:
+                    console.print("• pydantic-ai: Não foi possível determinar a versão")
                 continue
             
             if not user_input.strip():
@@ -95,7 +113,7 @@ async def main():
                 
             except Exception as e:
                 console.print(f"\n[bold red][Erro][/bold red] Ocorreu um problema: {str(e)}")
-                console.print("[yellow]Tente novamente ou verifique as configurações.[/yellow]")
+                console.print("[yellow]Tente novamente ou digite 'debug' para ver informações de diagnóstico.[/yellow]")
 
 if __name__ == "__main__":
     try:

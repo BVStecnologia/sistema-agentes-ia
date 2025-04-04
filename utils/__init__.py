@@ -1,1 +1,1 @@
-# Este arquivo está vazio para que o diretório utils seja reconhecido como um pacote Python
+# Pacote de utilitários para o sistema de agentes

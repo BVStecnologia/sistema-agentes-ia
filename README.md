@@ -9,34 +9,12 @@ Este é um sistema hierárquico de agentes de IA que usa o Model Context Protoco
 - **Facilmente Extensível**: Estrutura modular para adicionar novos agentes
 - **Baseado em MCP**: Utiliza o Model Context Protocol para comunicação padronizada
 
-## Estrutura do Projeto
+## Requisitos
 
-```
-sistema-agentes-ia/
-│
-├── main.py                 # Arquivo principal que inicia o sistema
-├── requirements.txt        # Dependências do projeto
-├── .env.example           # Exemplo de variáveis de ambiente
-├── GETTING_STARTED.md     # Guia detalhado de inicialização
-│
-├── agente_central/         # Agente coordenador principal
-│   ├── __init__.py
-│   ├── agent.py            # Implementação do agente central
-│   └── README.md           # Documentação do agente central
-│
-├── agentes/                # Pasta com todos os agentes especializados
-│   │
-│   ├── brave/              # Agente para Brave Search
-│   │   ├── __init__.py
-│   │   ├── agent.py        # Implementação do agente Brave
-│   │   ├── tools.py        # Ferramentas específicas do Brave
-│   │   └── README.md       # Documentação do agente Brave
-│
-└── utils/                  # Utilitários compartilhados
-    ├── __init__.py
-    ├── models.py           # Função de acesso aos modelos
-    └── server_manager.py   # Gerenciador de servidores MCP
-```
+- Python 3.9+
+- Node.js 14+ e npm
+- Chave de API do OpenAI (ou outro provedor LLM compatível)
+- Chave de API do Brave Search
 
 ## Instalação Rápida
 
@@ -84,6 +62,51 @@ python main.py
 ```
 
 Isso abrirá uma interface de linha de comando onde você pode fazer perguntas e receber respostas baseadas em pesquisas na web através do Brave Search.
+
+### Comandos Disponíveis
+
+- Digite qualquer pergunta para pesquisar na web
+- `ajuda` ou `help` - Mostra instruções de uso
+- `debug` - Mostra informações de diagnóstico do sistema
+- `sair`, `exit` ou `quit` - Encerra o programa
+
+## Solução de Problemas
+
+Se encontrar problemas ao iniciar o sistema, verifique:
+
+1. Se o Node.js está instalado e funcionando
+2. Se o servidor MCP do Brave foi instalado corretamente
+3. Se as chaves de API estão configuradas no arquivo .env
+
+Veja o arquivo [GETTING_STARTED.md](GETTING_STARTED.md) para instruções detalhadas de solução de problemas.
+
+## Estrutura do Projeto
+
+```
+sistema-agentes-ia/
+│
+├── main.py                 # Arquivo principal que inicia o sistema
+├── requirements.txt        # Dependências do projeto
+├── .env.example           # Exemplo de variáveis de ambiente
+├── GETTING_STARTED.md     # Guia detalhado de inicialização
+│
+├── agente_central/         # Agente coordenador principal
+│   ├── __init__.py
+│   └── agent.py            # Implementação do agente central
+│
+├── agentes/                # Pasta com todos os agentes especializados
+│   │
+│   └── brave/              # Agente para Brave Search
+│       ├── __init__.py
+│       ├── agent.py        # Implementação do agente Brave
+│       ├── tools.py        # Ferramentas específicas do Brave
+│       └── README.md       # Documentação do agente Brave
+│
+└── utils/                  # Utilitários compartilhados
+    ├── __init__.py
+    ├── models.py           # Função de acesso aos modelos
+    └── server_manager.py   # Gerenciador de servidores MCP
+```
 
 ## Guia Detalhado
 

@@ -1,1 +1,1 @@
-# Este arquivo está vazio para que o diretório agente_central seja reconhecido como um pacote Python
+# Pacote para o agente central coordenador

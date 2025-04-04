@@ -67,6 +67,62 @@ LLM_API_KEY=sua_chave_openai_aqui
 BRAVE_API_KEY=sua_chave_brave_aqui
 ```
 
+## Solução de Problemas Comuns
+
+### 1. Erro de Módulo Não Encontrado
+
+**Problema**: `ModuleNotFoundError: No module named 'pydantic_ai'`
+
+**Solução**: Certifique-se de que o ambiente virtual está ativado e reinstale as dependências:
+
+```bash
+pip install -r requirements.txt
+```
+
+Se o problema persistir, tente instalar o pydantic-ai diretamente:
+
+```bash
+pip install pydantic-ai>=0.6.0
+```
+
+### 2. Erro ao Iniciar o Servidor MCP
+
+**Problema**: `RuntimeError: npx não encontrado` ou erro relacionado ao MCP
+
+**Solução**: 
+
+1. Verifique se o Node.js está instalado:
+```bash
+node --version
+npm --version
+```
+
+2. Se estiver instalado, tente reinstalar o pacote MCP:
+```bash
+npm install -g @modelcontextprotocol/server-brave-search
+```
+
+3. Em alguns sistemas, pode ser necessário usar sudo:
+```bash
+sudo npm install -g @modelcontextprotocol/server-brave-search
+```
+
+### 3. Erro de Chave de API
+
+**Problema**: `ValueError: BRAVE_API_KEY não configurada` ou erro de autenticação
+
+**Solução**: Verifique seu arquivo `.env` e certifique-se de que a chave API está configurada corretamente.
+
+### 4. Comando de Diagnóstico
+
+O sistema inclui um comando de diagnóstico que pode ajudar a identificar problemas:
+
+```
+debug
+```
+
+Digite este comando quando o sistema estiver em execução para ver informações sobre a configuração atual.
+
 ## Execução do Sistema
 
 ### Iniciar o Sistema
@@ -84,47 +140,6 @@ Experimente estas consultas para testar o sistema:
 1. "Quais são as últimas notícias sobre tecnologia?"
 2. "Busque informações sobre o clima em São Paulo"
 3. "Me dê um resumo sobre inteligência artificial"
-
-## Solução de Problemas
-
-### Verificação da Instalação
-
-Para verificar se o servidor MCP do Brave está instalado corretamente:
-
-```bash
-npx @modelcontextprotocol/server-brave-search --help
-```
-
-Deveria mostrar as opções disponíveis para o servidor.
-
-### Problemas Comuns
-
-1. **Erro de Conexão com o Servidor MCP**:
-   - Verifique se o Node.js está instalado e atualizado
-   - Reinstale o pacote MCP: `npm install -g @modelcontextprotocol/server-brave-search`
-
-2. **Erro de Autenticação da API**:
-   - Verifique se as chaves de API no arquivo `.env` estão corretas
-   - Certifique-se de que a chave do Brave Search está ativa
-
-3. **Erro ao Iniciar o Agente**:
-   - Verifique os logs para mensagens de erro específicas
-   - Certifique-se de que todas as dependências foram instaladas
-
-## Extendendo o Sistema
-
-Depois que o agente Brave estiver funcionando corretamente, você pode expandir o sistema adicionando outros agentes:
-
-1. Implemente o YouTube, seguindo o padrão do agente Brave
-2. Adicione o Reddit
-3. Adicione o Supabase
-
-Para cada novo agente, você precisará:
-
-1. Criar os arquivos necessários na pasta correspondente em `agentes/`
-2. Instalar o servidor MCP apropriado
-3. Atualizar o agente central para incluir o novo agente
-4. Configurar as variáveis de ambiente para o novo serviço
 
 ## Executando com Claude Code
 
@@ -144,9 +159,3 @@ claude-code "Estou recebendo o erro [DESCREVA O ERRO]. Como posso resolver?"
 # Exemplo para adicionar novas funcionalidades
 claude-code "Adicione suporte para pesquisas de imagens no agente Brave"
 ```
-
-O Claude Code pode ajudar com:
-- Implementação de novos agentes
-- Correção de bugs
-- Melhorias na interface de usuário
-- Adição de novas funcionalidades

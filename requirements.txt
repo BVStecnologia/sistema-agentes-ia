@@ -1,5 +1,5 @@
 # Biblioteca principal para agentes
-pydantic-ai>=0.0.52
+pydantic-ai>=0.6.0
 
 # Biblioteca para manipulação de ambiente
 python-dotenv>=1.0.0
@@ -7,10 +7,10 @@ python-dotenv>=1.0.0
 # Biblioteca para interface de usuário
 rich>=13.5.0
 
-# Cliente Supabase
+# Cliente Supabase (para expansão futura)
 supabase>=2.0.0
 
-# Cliente Reddit (opcional, pode ser usado pelo MCP server)
+# Cliente Reddit (para expansão futura)
 praw>=7.7.1
 
 # Utilitários
