@@ -1,0 +1,1 @@
+# Pacote para o agente especializado em pesquisas no Brave Search
